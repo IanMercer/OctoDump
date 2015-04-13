@@ -108,6 +108,9 @@ namespace OctopusDump
         public string Description { get; set; }
         public string VariableSetId { get; set; }
         public string DeploymentProcessId { get; set; }
+
+        public DeploymentProcessDto DeploymentProcess { get; set; }     // inserted manually
+
         public string[] IncludedLibraryVariableSetIds { get; set; }
         public bool DefaultToSkipIfAlreadyInstalled { get; set; }
         public VersioningStrategyDto VersioningStrategy { get; set; }
@@ -263,4 +266,48 @@ namespace OctopusDump
         public string Label { get; set; }
         public bool Required { get; set; }
     }
+
+    internal class DeploymentProcessDto
+    {
+        public string LastSnapshotId { get; set; }
+        public string ProjectId { get; set; }
+        public IList<DeploymentStepDto> Steps { get; set; }
+        public int Version { get; set; }
+    }
+
+    internal enum DeploymentStepConditionDto
+    {
+        Success = 0,
+        Failure = 1,
+        Always = 2,
+    }
+
+    internal class DeploymentActionDto
+    {
+        public string ActionType { get; set; }
+        public string[] Environments { get; set; }
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public IDictionary<string, string> Properties { get; set; }
+        public IDictionary<string, string> SensitiveProperties { get; set; }
+    }
+
+    internal class DeploymentStepDto
+    {
+        public List<DeploymentActionDto> Actions { get; set; }
+        public DeploymentStepConditionDto Condition { get; set; }
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public IDictionary<string, string> Properties { get; set; }
+        public bool RequiresPackagesToBeAcquired { get; set; }
+        public IDictionary<string, string> SensitiveProperties { get; set; }
+        public DeploymentStepStartTriggerDto StartTrigger { get; set; }
+    }
+
+    internal enum DeploymentStepStartTriggerDto
+    {
+        StartAfterPrevious = 0,
+        StartWithPrevious = 1,
+    }
+
 }

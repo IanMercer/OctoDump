@@ -31,6 +31,20 @@ namespace OctopusDump
             return new FindAllResolver<OctopusRepository, T>(selector);
         }
 
+        private class ProjectWithStepsResolver : ValueResolver<OctopusRepository, List<ProjectDto>>
+        {
+            protected override List<ProjectDto> ResolveCore(OctopusRepository source)
+            {
+                var projects = source.Projects.FindAll();
+                var projectDtos = projects.Select(p => Mapper.Map<ProjectDto>(p)).ToList();
+                foreach (var p in projectDtos)
+                {
+                    p.DeploymentProcess = Mapper.Map<DeploymentProcessDto>(source.DeploymentProcesses.Get(p.DeploymentProcessId));
+                }
+                return projectDtos;
+            }
+        }
+
         public static void CreateMap()
         {
             Mapper.CreateMap<TeamResource, TeamDto>();
@@ -42,7 +56,8 @@ namespace OctopusDump
             Mapper.CreateMap<LifecycleResource, LifeCycleDto>();
             Mapper.CreateMap<MachineResource, MachineDto>();
             Mapper.CreateMap<ProjectGroupResource, ProjectGroupDto>();
-            Mapper.CreateMap<ProjectResource, ProjectDto>();
+            Mapper.CreateMap<ProjectResource, ProjectDto>()
+                .ForMember(x => x.DeploymentProcess, opt => opt.Ignore());
             Mapper.CreateMap<UserRoleResource, UserRoleDto>();
             Mapper.CreateMap<PhaseResource, PhaseDto>();
             Mapper.CreateMap<VersioningStrategyResource, VersioningStrategyDto>();
@@ -58,8 +73,11 @@ namespace OctopusDump
             Mapper.CreateMap<ScopeField, ScopeFieldDto>();
             Mapper.CreateMap<ScopeValue, ScopeValueDto>();
 
-
-
+            Mapper.CreateMap<DeploymentProcessResource, DeploymentProcessDto>();
+            Mapper.CreateMap<DeploymentStepResource, DeploymentStepDto>();
+            Mapper.CreateMap<DeploymentStepCondition, DeploymentStepConditionDto>();
+            Mapper.CreateMap<DeploymentActionResource, DeploymentActionDto>();
+            Mapper.CreateMap<DeploymentStepStartTrigger, DeploymentStepStartTriggerDto>();
 
             Mapper.CreateMap<OctopusRepository, RepositoryDto>()
                 .ForMember(x => x.Certificates, opt => opt.ResolveUsing(FindAll(x => x.Certificates.FindAll())))
@@ -74,7 +92,15 @@ namespace OctopusDump
                 .ForMember(x => x.Machines, opt => opt.ResolveUsing(FindAll(x => x.Machines.FindAll())))
 
                 .ForMember(x => x.ProjectGroups, opt => opt.ResolveUsing(FindAll(x => x.ProjectGroups.FindAll())))
-                .ForMember(x => x.Projects, opt => opt.ResolveUsing(FindAll(x => x.Projects.FindAll())))
+
+                .ForMember(x => x.Projects, opt => opt.ResolveUsing(new ProjectWithStepsResolver()))
+            //FindAll(x => x.Projects.FindAll()
+            //        .Select(p => p.WithSteps(x => x.DeploymentProcesses.Get(p.DeploymentProcessId)))
+            //        .ToList()
+            //    )))
+
+//                .ForMember(x => x.DeploymentProcesses, opt => opt.ResolveUsing(FindAll(x => x.DeploymentProcesses.FindAll())))
+
                 .ForMember(x => x.Releases, opt => opt.ResolveUsing(FindAll(x => x.Releases.FindAll())))
 
                 .ForMember(x => x.UserRoles, opt => opt.ResolveUsing(FindAll(x => x.UserRoles.FindAll())))
@@ -84,6 +110,7 @@ namespace OctopusDump
 
                 //.ForMember(x => x.RetentionPolicies, opt => opt.ResolveUsing(FindAll(x => x.RetentionPolicies)))
                 ;
+
                 Mapper.AssertConfigurationIsValid();
         }
     }
