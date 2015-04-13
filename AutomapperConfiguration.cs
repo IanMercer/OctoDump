@@ -94,12 +94,6 @@ namespace OctopusDump
                 .ForMember(x => x.ProjectGroups, opt => opt.ResolveUsing(FindAll(x => x.ProjectGroups.FindAll())))
 
                 .ForMember(x => x.Projects, opt => opt.ResolveUsing(new ProjectWithStepsResolver()))
-            //FindAll(x => x.Projects.FindAll()
-            //        .Select(p => p.WithSteps(x => x.DeploymentProcesses.Get(p.DeploymentProcessId)))
-            //        .ToList()
-            //    )))
-
-//                .ForMember(x => x.DeploymentProcesses, opt => opt.ResolveUsing(FindAll(x => x.DeploymentProcesses.FindAll())))
 
                 .ForMember(x => x.Releases, opt => opt.ResolveUsing(FindAll(x => x.Releases.FindAll())))
 
@@ -107,8 +101,6 @@ namespace OctopusDump
                 .ForMember(x => x.MachineRoles, opt => opt.ResolveUsing(y => y.MachineRoles.GetAllRoleNames()))     // odd discrepancy in naming
                 .ForMember(x => x.Users, opt => opt.ResolveUsing(FindAll(x => x.Users.FindAll())))
                 .ForMember(x => x.Teams, opt => opt.ResolveUsing(FindAll(x => x.Teams.FindAll())))
-
-                //.ForMember(x => x.RetentionPolicies, opt => opt.ResolveUsing(FindAll(x => x.RetentionPolicies)))
                 ;
 
                 Mapper.AssertConfigurationIsValid();

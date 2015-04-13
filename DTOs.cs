@@ -29,14 +29,19 @@ namespace OctopusDump
         public VariableSetDtos[] VariableSets { get; set; }
     }
 
-    internal class CertificateDto
+    internal interface IId
+    {
+        string Id { get; set; }
+    }
+
+    internal class CertificateDto : IId
     {
         public string Id { get; set; }
         public string Name { get; set; }
         public string Thumbprint { get; set; }
     }
 
-    internal class EnvironmentDto
+    internal class EnvironmentDto : IId
     {
         public string Id { get; set; }
         public string Name { get; set; }
@@ -47,7 +52,7 @@ namespace OctopusDump
         public string LastModifiedBy { get; set; }              // Why is this not a UserId?
     }
 
-    internal class FeedDto
+    internal class FeedDto : IId
     {
         public string Id { get; set; }
         public string Name { get; set; }
@@ -56,7 +61,7 @@ namespace OctopusDump
         public string NewPassword { get; set; }
     }
 
-    internal class LibraryVariableSetDto
+    internal class LibraryVariableSetDto : IId
     {
         public string Id { get; set; }
         public string Name { get; set; }
@@ -67,13 +72,13 @@ namespace OctopusDump
         public string LastModifiedBy { get; set; }              // Why is this not a UserId?
     }
 
-    internal class LifeCycleDto
+    internal class LifeCycleDto : IId
     {
         public string Id { get; set; }
         public PhaseDto[] Phases { get; set; }
     }
 
-    internal class MachineDto
+    internal class MachineDto : IId
     {
         public string Id { get; set; }
         public string Name { get; set; }
@@ -91,7 +96,7 @@ namespace OctopusDump
         public string LastModifiedBy { get; set; }              // Why is this not a UserId?
     }
 
-    internal class ProjectGroupDto
+    internal class ProjectGroupDto : IId
     {
         public string Id { get; set; }
         public string Name { get; set; }
@@ -100,7 +105,7 @@ namespace OctopusDump
         public string RetentionPolicyId { get; set; }
     }
 
-    internal class ProjectDto
+    internal class ProjectDto : IId
     {
         public string Id { get; set; }
         public string Name { get; set; }
@@ -126,7 +131,7 @@ namespace OctopusDump
         public string LastModifiedBy { get; set; }              // Why is this not a UserId?
     }
 
-    internal class ReleaseDto
+    internal class ReleaseDto : IId
     {
         public string Id { get; set; }
         public DateTimeOffset Assembled { get; set; }
@@ -163,14 +168,14 @@ namespace OctopusDump
         public string ReleaseCreationPackageStepId { get; set; }
     }
 
-    internal class PhaseDto
+    internal class PhaseDto : IId
     {
         public string Id { get; set; }
         public string Name { get; set; }
         // TODO: Other Phase information here
     }
 
-    internal class TeamDto
+    internal class TeamDto : IId
     {
         public string Id { get; set; }
         public string Name { get; set; }
@@ -185,7 +190,7 @@ namespace OctopusDump
         public bool CanChangeMembers { get; set; }
     }
 
-    internal class UserDto
+    internal class UserDto : IId
     {
         public string Id { get; set; }
         public string Username { get; set; }
@@ -196,7 +201,7 @@ namespace OctopusDump
         public bool IsRequestor { get; set; }
     }
 
-    internal class UserRoleDto
+    internal class UserRoleDto : IId
     {
         public string Id { get; set; }
         public string Name { get; set; }
@@ -229,7 +234,7 @@ namespace OctopusDump
         public string Name { get; set; }
     }
 
-    internal class VariableResourceDto
+    internal class VariableResourceDto : IId
     {
         public string Id { get; set; }
         public bool IsEditable { get; set; }
@@ -282,7 +287,7 @@ namespace OctopusDump
         Always = 2,
     }
 
-    internal class DeploymentActionDto
+    internal class DeploymentActionDto : IId
     {
         public string ActionType { get; set; }
         public string[] Environments { get; set; }
@@ -292,7 +297,7 @@ namespace OctopusDump
         public IDictionary<string, string> SensitiveProperties { get; set; }
     }
 
-    internal class DeploymentStepDto
+    internal class DeploymentStepDto : IId
     {
         public List<DeploymentActionDto> Actions { get; set; }
         public DeploymentStepConditionDto Condition { get; set; }
