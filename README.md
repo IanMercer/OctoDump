@@ -5,16 +5,20 @@ A dump-to-JSON utility for [Octopus Deploy](http://octopusdeploy.com)
     octopusdump -server:http://myserver -apiKey:API-XXXXXXXXX > octo.txt
 
 # Description
-I needed a way to examine all of the configuration data in Octopus Deploy (i.e. excluding any logging information) and
-a way to be able to diff any changes I made to understand precisely what had changed.
+This utility dumps most of the configuration data from an Octopus Deploy Server into a JSON file. It avoids any
+collections that are logs of activity and any properties that are status related not configuration related.
 
-This quick command line utility does that, exporting all (actually "most" as I'm still working on it) of the settings
-to the console output. From there you can pipe it to a file and add that file to your version control system. 
+Once in a JSON file you can easily check it into source control. If you rerun the utility after each change
+and commit those changes to revision control you will have a complete hsitory of changes made and you can use
+diff to see what changed between any pair of revisions.
+
+This is not a sanctioned tool, and it's not a substitute for the Export and Import capabilities provided already
+by Octopus Deploy's command line utilities. I made it for my own purposes but am providing it here so that others
+can use it and hopefully improve it.
 
 This utility uses Octopus Deploy's REST API and the Octopus.Client .NET wrapper for it. It also uses Automapper 
 to map each of the Octopus Resource types to a DTO type selectively excluding any fields that are not relevant
-as part of the configuration.  Various 'state' properties for example are excluded as are any
-objects related to logging deployments.
+as part of the configuration. And, of course, it also uses JSON.NET for serialization.
 
 This is just an initial commit for today, more to follow.
 
