@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Octopus.Client;
 using Octopus.Client.Model;
+using Octopus.Platform.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,14 +48,28 @@ namespace OctopusDump
             Mapper.CreateMap<VersioningStrategyResource, VersioningStrategyDto>();
             Mapper.CreateMap<ReleaseCreationStrategyResource, ReleaseCreationStrategyDto>();
             Mapper.CreateMap<VariableSetResource, VariableSetDtos>();
+            Mapper.CreateMap<VariableResource, VariableResourceDto>();
             Mapper.CreateMap<ReleaseResource, ReleaseDto>();
             Mapper.CreateMap<SelectedPackage, SelectedPackageDto>();
+            Mapper.CreateMap<ReferenceDataItem, ReferenceDataItemDto>();
+            Mapper.CreateMap<VariableScopeValues, VariableScopeValuesDto>();
+            Mapper.CreateMap<VariablePromptOptions, VariablePromptOptionsDto>();
+            Mapper.CreateMap<ScopeSpecification, ScopeSpecificationDto>();
+            Mapper.CreateMap<ScopeField, ScopeFieldDto>();
+            Mapper.CreateMap<ScopeValue, ScopeValueDto>();
+
+
+
 
             Mapper.CreateMap<OctopusRepository, RepositoryDto>()
                 .ForMember(x => x.Certificates, opt => opt.ResolveUsing(FindAll(x => x.Certificates.FindAll())))
                 .ForMember(x => x.Environments, opt => opt.ResolveUsing(FindAll(x => x.Environments.FindAll())))
                 .ForMember(x => x.Feeds, opt => opt.ResolveUsing(FindAll(x => x.Feeds.FindAll())))
                 .ForMember(x => x.LibraryVariableSets, opt => opt.ResolveUsing(FindAll(x => x.LibraryVariableSets.FindAll())))
+
+                .ForMember(x => x.VariableSets, opt => opt.ResolveUsing(FindAll(x => x.LibraryVariableSets.FindAll()
+                    .Select(p => x.VariableSets.Get(p.VariableSetId)).ToList())))
+
                 .ForMember(x => x.LifeCycles, opt => opt.ResolveUsing(FindAll(x => x.Lifecycles.FindAll())))
                 .ForMember(x => x.Machines, opt => opt.ResolveUsing(FindAll(x => x.Machines.FindAll())))
 

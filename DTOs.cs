@@ -26,7 +26,7 @@ namespace OctopusDump
 //            public RetentionPolicyDto[] RetentionPolicies { get; set; }
         public UserRoleDto[] UserRoles { get; set; }
         public ReleaseDto[] Releases { get; set; }
-//            public VariableSetDtos[] VariableSets { get; set; }
+        public VariableSetDtos[] VariableSets { get; set; }
     }
 
     internal class CertificateDto
@@ -206,6 +206,61 @@ namespace OctopusDump
 
     internal class VariableSetDtos
     {
-        // ??
+        public string OwnerId { get; set; }
+        public VariableScopeValuesDto ScopeValues { get; set; }
+        public IList<VariableResourceDto> Variables { get; set; }
+        public int Version { get; set; }
+    }
+
+    internal class VariableScopeValuesDto
+    {
+        public List<ReferenceDataItemDto> Actions { get; set; }
+        public List<ReferenceDataItemDto> Environments { get; set; }
+        public List<ReferenceDataItemDto> Machines { get; set; }
+        public List<ReferenceDataItemDto> Roles { get; set; }
+    }
+
+    internal class ReferenceDataItemDto
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+    }
+
+    internal class VariableResourceDto
+    {
+        public string Id { get; set; }
+        public bool IsEditable { get; set; }
+        public bool IsSensitive { get; set; }
+        public string Name { get; set; }
+        public VariablePromptOptionsDto Prompt { get; set; }
+        public ScopeSpecificationDto Scope { get; set; }
+        public string Value { get; set; }
+    }
+
+    internal class ScopeSpecificationDto : Dictionary<ScopeFieldDto, ScopeValueDto>
+    {
+    }
+
+    public enum ScopeFieldDto
+    {
+        Project = 0,
+        Environment = 1,
+        Machine = 2,
+        Role = 3,
+        TargetRole = 4,
+        Action = 5,
+        User = 6,
+        Private = 7,
+    }
+
+    internal class ScopeValueDto : HashSet<string> // A Hashset (inherits) : Octopus.Platform.Model.ReferenceCollection
+    {
+    }
+
+    internal class VariablePromptOptionsDto
+    {
+        public string Description { get; set; }
+        public string Label { get; set; }
+        public bool Required { get; set; }
     }
 }
